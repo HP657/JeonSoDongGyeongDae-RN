@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +15,19 @@ const data = [
   { id: '7', name: '윤과장', department: 'AI 개발 1팀', count: 9, change: 0, rank: 7 },
   { id: '8', name: '탄소발자국', department: '환경 마케팅 팀', count: 7, change: 1, rank: 8 },
   { id: '9', name: '이산화', department: '마케팅 인사팀', count: 7, change: 0, rank: 9 },
+  { id: '10', name: '박대리', department: 'AI 개발 3팀', count: 6, change: 1, rank: 10 },
+  { id: '11', name: '최사원', department: '마케팅 1팀', count: 6, change: 0, rank: 11 },
+  { id: '12', name: '김과장', department: 'AI 개발 2팀', count: 5, change: 1, rank: 12 },
+  { id: '13', name: '이사원', department: '마케팅 2팀', count: 5, change: 0, rank: 13 },
+  { id: '14', name: '정사원', department: 'AI 개발 1팀', count: 4, change: 1, rank: 14 },
+  { id: '15', name: '박과장', department: '환경 마케팅 팀', count: 4, change: 0, rank: 15 },
+  { id: '16', name: '최대리', department: '마케팅 3팀', count: 3, change: 1, rank: 16 },
+  { id: '17', name: '김대리', department: 'AI 개발 3팀', count: 3, change: 0, rank: 17 },
+  { id: '18', name: '이과장', department: '마케팅 인사팀', count: 2, change: 1, rank: 18 },
+  { id: '19', name: '정사원', department: '환경 마케팅 팀', count: 2, change: 0, rank: 19 },
+  { id: '20', name: '박사원', department: 'AI 개발 2팀', count: 1, change: 1, rank: 20 },
 ];
+
 
 const RankingScreen = () => {
   const [selectedTab, setSelectedTab] = useState('개인');
@@ -92,23 +103,56 @@ const RankingPage = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: false, 
-          tabBarIcon: ({ color, size }) => {
+          headerShown: false,
+          tabBarIcon: ({ focused }) => {
             let iconName;
+            let iconStyle;
 
             if (route.name === 'Home') {
-              iconName = 'home-outline';
+              iconName = require('../assets/home.png');
+              iconStyle = focused ? styles.iconHomeFocused : styles.iconHome;
             } else if (route.name === 'Mission') {
-              iconName = 'list-outline';
+              iconName = require('../assets/mission.png');
+              iconStyle = focused ? styles.iconMissionFocused : styles.iconMission;
             } else if (route.name === 'Chat') {
-              iconName = 'chatbubble-outline';
+              iconName = require('../assets/chat.png');
+              iconStyle = styles.iconChat;
             } else if (route.name === 'Ranking') {
-              iconName = 'trophy-outline';
+              iconName = require('../assets/ranking.png');
+              iconStyle = focused ? styles.iconRankingFocused : styles.iconRanking;
             } else if (route.name === 'Points') {
-              iconName = 'pricetag-outline';
+              iconName = require('../assets/points.png');
+              iconStyle = focused ? styles.iconPointsFocused : styles.iconPoints;
             }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return (
+              <View style={[
+                route.name === 'Chat' ? styles.iconContainerChat : styles.iconContainer,
+                route.name === 'Points' && styles.iconContainerPoints
+              ]}>
+                <Image source={iconName} style={iconStyle} />
+                {route.name === 'Chat' && <Text style={styles.iconContainerChatLabel}>챗봇</Text>}
+              </View>
+            );
+          },
+          tabBarLabel: ({ focused }) => {
+            if (route.name === 'Chat') return null; // Hide label for Chat
+            let labelStyle = focused ? styles.labelFocused : styles.label;
+            let label;
+
+            if (route.name === 'Home') {
+              label = '홈';
+            } else if (route.name === 'Mission') {
+              label = '미션';
+            } else if (route.name === 'Chat') {
+              label = '채팅';
+            } else if (route.name === 'Ranking') {
+              label = '랭킹';
+            } else if (route.name === 'Points') {
+              label = '포인트 상점';
+            }
+
+            return <Text style={labelStyle}>{label}</Text>;
           },
         })}
         tabBarOptions={{
@@ -214,11 +258,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     width: 30,
-    marginLeft: 10,
+    textAlign: 'center',
   },
   info: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 12,
   },
   name: {
     fontSize: 16,
@@ -237,8 +281,10 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   prizeIcon: {
-    width: 30,
-    height: 30,
+    width: 23,
+    height: 23,
+    marginLeft: 5,
+    marginRight: 4,
   },
   screen: {
     flex: 1,
@@ -251,10 +297,80 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#ccc',
     alignItems: 'center',
+    height: 82
   },
   footerText: {
     fontSize: 16,
     color: 'gray',
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconContainerChat: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
+    borderRadius: 32.5,
+    width: 65,
+    height: 65,
+  },
+  iconContainerChatLabel: {
+    color: 'white',
+    fontSize: 12,
+    marginTop: 5,
+  },
+  iconContainerPoints: {
+    marginTop: 12,
+  },
+  iconHome: {
+    width: 25,
+    height: 25,
+  },
+  iconHomeFocused: {
+    width: 25,
+    height: 25,
+    tintColor: 'green',
+  },
+  iconMission: {
+    width: 25,
+    height: 25,
+  },
+  iconMissionFocused: {
+    width: 25,
+    height: 25,
+    tintColor: 'green',
+  },
+  iconChat: {
+    width: 31,
+    height: 24,
+    tintColor: 'white', // Always white for Chat
+  },
+  iconRanking: {
+    width: 20,
+    height: 20,
+  },
+  iconRankingFocused: {
+    width: 20,
+    height: 20,
+    tintColor: 'green',
+  },
+  iconPoints: {
+    width: 29,
+    height: 29,
+  },
+  iconPointsFocused: {
+    width: 29,
+    height: 29,
+    tintColor: 'green',
+  },
+  label: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  labelFocused: {
+    fontSize: 12,
+    color: 'green',
   },
 });
 
