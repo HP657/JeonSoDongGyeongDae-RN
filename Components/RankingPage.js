@@ -3,7 +3,7 @@ import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 
 const data = [
   {
-    id: "1",
+    id: 1,
     name: "정과장",
     department: "AI 개발 1팀",
     count: 27,
@@ -11,15 +11,15 @@ const data = [
     rank: 1,
   },
   {
-    id: "2",
+    id: 2,
     name: "이대리",
     department: "마케팅 2팀",
     count: 21,
-    change: 1,
+    change: -2,
     rank: 2,
   },
   {
-    id: "3",
+    id: 3,
     name: "김사원",
     department: "AI 개발 2팀",
     count: 13,
@@ -27,15 +27,15 @@ const data = [
     rank: 3,
   },
   {
-    id: "4",
+    id: 4,
     name: "천연 수세미",
     department: "마케팅 3팀",
     count: 11,
-    change: 0,
+    change: -1,
     rank: 4,
   },
   {
-    id: "5",
+    id: 5,
     name: "정대리",
     department: "마케팅 인사팀",
     count: 10,
@@ -43,15 +43,15 @@ const data = [
     rank: 5,
   },
   {
-    id: "6",
+    id: 6,
     name: "탄소시리",
     department: "환경 마케팅 팀",
     count: 9,
-    change: 1,
+    change: -3,
     rank: 6,
   },
   {
-    id: "7",
+    id: 7,
     name: "윤과장",
     department: "AI 개발 1팀",
     count: 9,
@@ -59,7 +59,7 @@ const data = [
     rank: 7,
   },
   {
-    id: "8",
+    id: 8,
     name: "탄소발자국",
     department: "환경 마케팅 팀",
     count: 7,
@@ -67,23 +67,23 @@ const data = [
     rank: 8,
   },
   {
-    id: "9",
+    id: 9,
     name: "이산화",
     department: "마케팅 인사팀",
     count: 7,
-    change: 0,
+    change: -1,
     rank: 9,
   },
   {
-    id: "10",
+    id: 10,
     name: "박대리",
     department: "AI 개발 3팀",
     count: 6,
-    change: 1,
+    change: -2,
     rank: 10,
   },
   {
-    id: "11",
+    id: 11,
     name: "최사원",
     department: "마케팅 1팀",
     count: 6,
@@ -91,7 +91,7 @@ const data = [
     rank: 11,
   },
   {
-    id: "12",
+    id: 12,
     name: "김과장",
     department: "AI 개발 2팀",
     count: 5,
@@ -99,15 +99,15 @@ const data = [
     rank: 12,
   },
   {
-    id: "13",
+    id: 13,
     name: "이사원",
     department: "마케팅 2팀",
     count: 5,
-    change: 0,
+    change: -2,
     rank: 13,
   },
   {
-    id: "14",
+    id: 14,
     name: "정사원",
     department: "AI 개발 1팀",
     count: 4,
@@ -115,7 +115,7 @@ const data = [
     rank: 14,
   },
   {
-    id: "15",
+    id: 15,
     name: "박과장",
     department: "환경 마케팅 팀",
     count: 4,
@@ -123,7 +123,7 @@ const data = [
     rank: 15,
   },
   {
-    id: "16",
+    id: 16,
     name: "최대리",
     department: "마케팅 3팀",
     count: 3,
@@ -131,15 +131,15 @@ const data = [
     rank: 16,
   },
   {
-    id: "17",
+    id: 17,
     name: "김대리",
     department: "AI 개발 3팀",
     count: 3,
-    change: 0,
+    change: -1,
     rank: 17,
   },
   {
-    id: "18",
+    id: 18,
     name: "이과장",
     department: "마케팅 인사팀",
     count: 2,
@@ -147,19 +147,19 @@ const data = [
     rank: 18,
   },
   {
-    id: "19",
+    id: 19,
     name: "정사원",
     department: "환경 마케팅 팀",
     count: 2,
-    change: 0,
+    change: -3,
     rank: 19,
   },
   {
-    id: "20",
+    id: 20,
     name: "박사원",
     department: "AI 개발 2팀",
     count: 1,
-    change: 1,
+    change: -1,
     rank: 20,
   },
 ];
@@ -193,9 +193,21 @@ const RankingPage = () => {
         <Text style={styles.department}>{item.department}</Text>
       </View>
       <Text style={styles.count}>{item.count}개</Text>
-      <Text style={styles.change}>
-        {item.change > 0 ? `▲${item.change}` : `▼${Math.abs(item.change)}`}
-      </Text>
+      <View style={styles.changeContainer}>
+        {item.change > 0 ? (
+          <Text style={[styles.changeText, { color: "red" }]}>
+            {"▲ "}
+            {item.change}
+          </Text>
+        ) : item.change < 0 ? (
+          <Text style={[styles.changeText, { color: "blue" }]}>
+            {"▼ "}
+            {Math.abs(item.change)}
+          </Text>
+        ) : (
+          <Text style={[styles.changeText, { color: "black" }]}>{"--"}</Text>
+        )}
+      </View>
     </View>
   );
 
@@ -358,9 +370,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  change: {
+  changeContainer: {
+    width: 50, // Consistent width for better alignment
+    alignItems: "center", // Center text vertically and horizontally
+  },
+  changeText: {
     fontSize: 16,
-    color: "red",
+    fontWeight: "bold",
   },
   prizeIcon: {
     width: 23,
