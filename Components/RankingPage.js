@@ -211,6 +211,14 @@ const RankingPage = () => {
     </View>
   );
 
+  const myRankData = {
+    id: 0,
+    name: "정과장",
+    department: "AI 개발 1팀",
+    count: 27,
+    change: 3,
+    rank: 1,
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -250,16 +258,40 @@ const RankingPage = () => {
           </Text>
         </View>
       </View>
-      <View style={styles.myRank}>
-        <Text style={styles.myRankText}>내 순위</Text>
-        <Text style={styles.myRankPosition}>6등</Text>
-        <Text style={styles.myRankCount}>7월 기준 9개</Text>
+      <View style={styles.bg}>
+        <View style={styles.myRank}>
+          <View style={styles.myRankInfo}>
+            <Text style={styles.myRankText}>내 순위</Text>
+            <Text style={styles.myRankPosition}>{myRankData.rank}등</Text>
+            <Text style={styles.myRankCount}>{myRankData.count}개</Text>
+          </View>
+          <View style={styles.changeContainer}>
+            {myRankData.change > 0 ? (
+              <Text style={[styles.changeText, { color: "red" }]}>
+                {"▲ "}
+                {myRankData.change}
+              </Text>
+            ) : myRankData.change < 0 ? (
+              <Text style={[styles.changeText, { color: "blue" }]}>
+                {"▼ "}
+                {Math.abs(myRankData.change)}
+              </Text>
+            ) : (
+              <Text style={[styles.changeText, { color: "black" }]}>
+                {"--"}
+              </Text>
+            )}
+          </View>
+        </View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListFooterComponent={
+            <View style={{ marginBottom: 10, marginTop: 10 }} />
+          } // Add margin at the bottom
+        />
       </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
     </View>
   );
 };
@@ -319,34 +351,54 @@ const styles = StyleSheet.create({
     color: "green",
     fontWeight: "bold",
   },
+  bg: {
+    backgroundColor: "#f5f5f5",
+    flex: 1, // Allow the background to take full height
+  },
   myRank: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#e0f7e0",
+    backgroundColor: "#319E49",
     marginHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 15,
     marginTop: 10,
+    height: 45,
   },
   myRankText: {
-    fontSize: 16,
+    fontSize: 18,
+    color: "#fff",
     fontWeight: "bold",
+    marginLeft: 10,
+    marginRight: 10,
   },
   myRankPosition: {
-    fontSize: 16,
-    color: "green",
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    marginLeft: 10,
   },
   myRankCount: {
     fontSize: 16,
-    color: "gray",
+    color: "#fff",
+    fontWeight: "bold",
+    marginLeft: 145,
+  },
+  myRankInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1, // Allow it to take available space
   },
   item: {
     flexDirection: "row",
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     alignItems: "center",
+    borderRadius: 15,
+    backgroundColor: "#fff",
+    height: 45, // Set a fixed height for consistency
+    marginHorizontal: 10, // Add horizontal margin for spacing
+    marginTop: 4,
   },
   rank: {
     fontSize: 18,
@@ -379,8 +431,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   prizeIcon: {
-    width: 23,
-    height: 23,
+    width: 25,
+    height: 25,
     marginLeft: 5,
     marginRight: 4,
   },
