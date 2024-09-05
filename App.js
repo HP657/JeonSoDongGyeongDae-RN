@@ -13,7 +13,12 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBar={(props) => <Footer {...props} />}>
+      <Tab.Navigator
+        tabBar={(props) => <Footer {...props} />}
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Tab.Screen
           name="Home"
           component={HomePage}
