@@ -67,11 +67,18 @@ const Footer = ({ state, descriptors, navigation }) => {
             <View style={route.name === "Chat" ? styles.chatIconWrapper : null}>
               <Image source={iconName} style={iconStyle} />
               {route.name === "Chat" && (
-                <Text style={styles.chatLabel}>채팅</Text>
+                <Text style={[styles.customFont, { color: "white" }]}>
+                  채팅
+                </Text>
               )}
             </View>
             {route.name !== "Chat" && (
-              <Text style={isFocused ? styles.labelFocused : styles.label}>
+              <Text
+                style={[
+                  isFocused ? styles.labelFocused : styles.label,
+                  styles.customFont,
+                ]}
+              >
                 {label}
               </Text>
             )}
@@ -178,6 +185,10 @@ const styles = StyleSheet.create({
   labelFocused: {
     fontSize: 12,
     color: "green",
+  },
+  customFont: {
+    fontFamily: "SUITE-Regular",
+    fontWeight: "bold",
   },
 });
 
