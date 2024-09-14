@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { StyleSheet, View, Image, Animated } from "react-native";
-import splashImage from "./../assets/co2icon.png"; // Update the path if necessary
+import { StyleSheet, View, Animated } from "react-native";
+import splashImage from "./../assets/co2icon.png";
 
 export default function SplashScreen({ navigation }) {
   const fillAnimation = useRef(new Animated.Value(0)).current;
