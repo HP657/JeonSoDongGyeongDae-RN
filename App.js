@@ -2,13 +2,17 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { View, Text, Button } from "react-native";
 import HomePage from "./Components/HomePage";
-import MissionPage from "./Components/MissionPage";
+import Camera from "./Components/Camera-temporary";
+// import MissionPage from "./Components/MissionPage";
 import ChatPage from "./Components/ChatPage";
 import PointsPage from "./Components/PointsPage";
 import RankingPage from "./Components/RankingPage";
 import Footer from "./Components/Footer";
 import SplashScreen from "./Components/SplashScreen";
+import { useCameraPermissions } from "expo-camera";
+import MissionPage from "./Components/MissionPage";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +32,8 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="Mission"
-        component={MissionPage}
+        component={Camera}
+        // component={MissionPage}
         options={{ tabBarLabel: "미션" }}
       />
       <Tab.Screen
@@ -51,6 +56,21 @@ const MainTabNavigator = () => {
 };
 
 const App = () => {
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+
+  if (cameraPermission === null) {
+    return <View />;
+  }
+
+  if (!cameraPermission.granted) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>카메라 사용을 위한 권한이 필요합니다.</Text>
+        <Button title="권한 요청" onPress={requestCameraPermission} />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
