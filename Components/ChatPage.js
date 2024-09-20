@@ -71,49 +71,53 @@ export default function Chatroom() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => alert("홈")} style={styles.typeBtn}>
-          <Image
-            source={require("./../assets/Logo.png")}
-            style={styles.headerImage}
-          />
-        </TouchableOpacity>
-        <View style={styles.headerRight}>
-          <Image
-            source={require("./../assets/lens.png")}
-            style={styles.headerImageLens}
-          />
-          <Image
-            source={require("./../assets/bell.png")}
-            style={styles.headerImageBell}
-          />
+      <View style={styles.innerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => alert("홈")}>
+            <Image
+              source={require("./../assets/Logo.png")}
+              style={styles.headerImage}
+            />
+          </TouchableOpacity>
+          <View style={styles.headerRight}>
+            <TouchableOpacity onPress={() => alert("렌즈")}>
+              <Image
+                source={require("./../assets/lens.png")}
+                style={styles.headerImageLens}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => alert("벨")}>
+              <Image
+                source={require("./../assets/bell.png")}
+                style={styles.headerImageBell}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.chatContainer}>
-        <ScrollView contentContainerStyle={styles.chatArea}>
-          {chatData.map((chat) => (
-            <View
-              key={chat.id}
-              style={
-                chat.type === "user"
-                  ? styles.userMessage
-                  : styles.responseMessage
-              }
-            >
-              <Text
+        <View style={styles.chatContainer}>
+          <ScrollView contentContainerStyle={styles.chatArea}>
+            {chatData.map((chat) => (
+              <View
+                key={chat.id}
                 style={
-                  chat.type === "user" ? styles.userText : styles.responseText
+                  chat.type === "user"
+                    ? styles.userMessage
+                    : styles.responseMessage
                 }
               >
-                {chat.message}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+                <Text
+                  style={
+                    chat.type === "user" ? styles.userText : styles.responseText
+                  }
+                >
+                  {chat.message}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
 
-      <View style={styles.footer}>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -139,6 +143,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: "space-between",
   },
   header: {
     position: "absolute",
@@ -179,7 +187,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     marginTop: 80,
-    marginBottom: 70,
+    marginBottom: 10,
   },
   chatArea: {
     padding: 16,
@@ -223,24 +231,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
   },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#fff",
-    paddingVertical: 10,
-    paddingHorizontal: 28,
-    zIndex: 10,
-  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#EDEDED",
-    borderRadius: 25,
-    paddingVertical: 10,
+    borderRadius: 60,
+    paddingVertical: 8,
     paddingHorizontal: 20,
-    marginHorizontal: 0,
+    width: "90%",
+    alignSelf: "center",
+    marginBottom: 12,
   },
   textInput: {
     flex: 1,
@@ -255,31 +255,5 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     tintColor: "green",
-  },
-  iconContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 10,
-  },
-  icon: {
-    width: 32,
-    height: 42,
-  },
-  missonicon: {
-    width: 32,
-    height: 42,
-  },
-  chaticon: {
-    width: 65,
-    height: 65,
-  },
-  shopicon: {
-    width: 32,
-    height: 42,
-  },
-  rankicon: {
-    width: 32,
-    height: 42,
   },
 });
