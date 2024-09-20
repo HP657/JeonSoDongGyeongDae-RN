@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 export default function Chatroom() {
+  const [question, setQuestion] = React.useState("");
   const chatData = [
     {
       id: 1,
@@ -121,11 +122,15 @@ export default function Chatroom() {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
+            onChangeText={setQuestion}
+            value={question}
             placeholder="질문을 입력해 주세요!"
             placeholderTextColor="#666"
           />
           <TouchableOpacity
-            onPress={() => alert("질문 제출!")}
+            onPress={() => {
+              setQuestion("");
+            }}
             style={styles.submitButton}
           >
             <Image
