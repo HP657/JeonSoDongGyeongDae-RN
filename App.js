@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, Button } from "react-native";
 import HomePage from "./Components/HomePage";
 import Camera from "./Components/Camera-temporary";
-// import MissionPage from "./Components/MissionPage";
 import ChatPage from "./Components/ChatPage";
 import PointsPage from "./Components/PointsPage";
 import RankingPage from "./Components/RankingPage";
@@ -32,8 +31,8 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="Mission"
-        component={Camera}
-        // component={MissionPage}
+        // component={Camera}
+        component={MissionPage}
         options={{ tabBarLabel: "미션" }}
       />
       <Tab.Screen
