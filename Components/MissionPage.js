@@ -89,24 +89,31 @@ const MissionPage = () => {
         </View>
         <View style={styles.missionList}>
           {missions.map((mission, index) => (
-            <TouchableOpacity key={index} style={styles.missionCard}>
-              <View style={styles.missionContent}>
-                <Text style={styles.missionClass}>{mission.missionclass}</Text>
-                <Text style={styles.missionTitle}>{mission.title}</Text>
-                <Text style={styles.description}>{mission.description}</Text>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={[styles.button, styles.authButton]}>
-                    <Text style={styles.buttonText}>인증하기</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.button, styles.confirmButton]}
-                  >
-                    <Text style={styles.confirmButtonText}>확인하기</Text>
-                  </TouchableOpacity>
+            <View key={index}>
+              <TouchableOpacity style={styles.missionCard}>
+                <View style={styles.missionContent}>
+                  <Text style={styles.missionClass}>
+                    {mission.missionclass}
+                  </Text>
+                  <Text style={styles.missionTitle}>{mission.title}</Text>
+                  <Text style={styles.description}>{mission.description}</Text>
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      style={[styles.button, styles.authButton]}
+                    >
+                      <Text style={styles.buttonText}>인증하기</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, styles.confirmButton]}
+                    >
+                      <Text style={styles.confirmButtonText}>확인하기</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <Image source={mission.image} style={styles.missionImage} />
-            </TouchableOpacity>
+                <Image source={mission.image} style={styles.missionImage} />
+              </TouchableOpacity>
+              {index < missions.length - 1 && <View style={styles.separator} />}
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -214,6 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     marginTop: 8,
+    right: 10,
   },
   button: {
     borderRadius: "10%",
@@ -227,11 +235,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white", // 확인하기 버튼 배경색
   },
   buttonText: {
-    color: "white", // 인증하기 버튼 텍스트 색상
+    color: "white",
+    fontSize: 10,
     fontWeight: "bold",
+    textAlignVertical: "center",
   },
   confirmButtonText: {
-    color: "black", // 확인하기 버튼 텍스트 색상
+    color: "black",
+    fontSize: 10,
     fontWeight: "bold",
   },
   tabContainer: {
@@ -274,6 +285,11 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: "#FFFFFF",
     zIndex: 1, // 다른 요소 위에 표시
+  },
+  separator: {
+    backgroundColor: "#e0e0e0",
+    height: 1,
+    width: "100%",
   },
 });
 
