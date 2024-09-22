@@ -37,7 +37,13 @@ const MissionPage = () => {
       <View style={styles.header}>
         <Text style={styles.headerText}>나의 미션</Text>
       </View>
-      <ScrollView contentContainerStyle={{ paddingTop: 90 }}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: 90,
+          marginLeft: 10,
+          marginRight: 10,
+        }}
+      >
         <View style={styles.titleRow}>
           <Text style={styles.title}>오늘의 </Text>
           <Text style={styles.title_sub}>추천 미션</Text>
