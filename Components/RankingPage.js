@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: "bold",
   },
   headerContent: {
