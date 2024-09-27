@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import CameraPage from "./CameraPage";
 
-const MissionPage = () => {
+const MainMissionPage = ({ setShowCameraPage }) => {
   const [activeTab, setActiveTab] = useState("일일");
-
   const missions = [
     {
       missionclass: "에너지",
@@ -33,7 +33,7 @@ const MissionPage = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.header}>
         <Text style={styles.headerText}>나의 미션</Text>
       </View>
@@ -48,7 +48,10 @@ const MissionPage = () => {
           <Text style={styles.title}>오늘의 </Text>
           <Text style={styles.title_sub}>추천 미션</Text>
         </View>
-        <TouchableOpacity style={{ zIndex: 0 }} onPress={() => alert("gd")}>
+        <TouchableOpacity
+          style={{ zIndex: 0 }}
+          onPress={() => setShowCameraPage(true)} // 카메라 페이지를 표시
+        >
           <View style={styles.card}>
             <Image
               source={require("./../assets/missionMain.png")}
@@ -117,6 +120,20 @@ const MissionPage = () => {
           ))}
         </View>
       </ScrollView>
+    </View>
+  );
+};
+
+const MissionPage = () => {
+  const [showCameraPage, setShowCameraPage] = useState(false);
+
+  return (
+    <View style={styles.container}>
+      {showCameraPage ? (
+        <CameraPage setShowCameraPage={setShowCameraPage} />
+      ) : (
+        <MainMissionPage setShowCameraPage={setShowCameraPage} />
+      )}
     </View>
   );
 };
