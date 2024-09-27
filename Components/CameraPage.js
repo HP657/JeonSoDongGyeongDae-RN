@@ -1,8 +1,16 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-export default function Camera() {
+function CameraPage({ setShowCameraPage }) {
+  // Accept the prop
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -27,6 +35,15 @@ export default function Camera() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => setShowCameraPage(false)}>
+          <Image
+            source={require("./../assets/arrow.png")}
+            style={styles.arrow}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>미션 클리어 카메라</Text>
+      </View>
       <CameraView style={styles.camera} facing={facing}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
@@ -42,6 +59,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+  },
+  header: {
+    flexDirection: "row", // Align items in a row
+    alignItems: "center", // Center items vertically
+    justifyContent: "space-between", // Space between items
+    paddingHorizontal: 16, // Add horizontal padding
+    marginBottom: 15,
+    marginTop: 50,
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    flex: 1, // Allow the text to take up available space
+    textAlign: "center", // Center the text
+    right: 10,
   },
   message: {
     textAlign: "center",
@@ -66,4 +98,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
+  arrow: {
+    width: 24,
+    height: 24,
+  },
 });
+
+export default CameraPage;
