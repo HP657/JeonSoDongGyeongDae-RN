@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, Button } from "react-native";
 import HomePage from "./Components/HomePage";
-import Camera from "./Components/Camera-temporary";
 import ChatPage from "./Components/ChatPage";
 import PointsPage from "./Components/PointsPage";
 import RankingPage from "./Components/RankingPage";
