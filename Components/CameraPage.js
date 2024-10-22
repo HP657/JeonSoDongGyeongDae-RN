@@ -1,5 +1,5 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Button,
   Image,
@@ -10,9 +10,10 @@ import {
 } from "react-native";
 
 function CameraPage({ setShowCameraPage }) {
-  // Accept the prop
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef(null);
+  const [photoUri, setPhotoUri] = useState(null);
 
   if (!permission) {
     return <View />;
@@ -27,6 +28,14 @@ function CameraPage({ setShowCameraPage }) {
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
+  }
+
+  async function takePicture() {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
+      setPhotoUri(photo.uri);
+      alert(photoUri);
+    }
   }
 
   function toggleCameraFacing() {
@@ -44,13 +53,19 @@ function CameraPage({ setShowCameraPage }) {
         </TouchableOpacity>
         <Text style={styles.headerText}>미션 클리어 카메라</Text>
       </View>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Text style={styles.text}>화면 전환</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={takePicture}>
+            <Text style={styles.text}>사진 찍기</Text>
+          </TouchableOpacity>
         </View>
       </CameraView>
+      {photoUri && (
+        <Image source={{ uri: photoUri }} style={styles.previewImage} />
+      )}
     </View>
   );
 }
