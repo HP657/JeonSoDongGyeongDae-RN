@@ -75,12 +75,6 @@ export default function HomePage() {
               </TouchableOpacity>
             ))}
           </View>
-          <View
-            style={[
-              styles.arrow,
-              { left: selectedTab * tabWidth + tabWidth - 17 },
-            ]}
-          />
           <View style={styles.dataContainer}>
             <Text style={[styles.dataLabel, { marginTop: 30 }]}>
               {tabs[selectedTab]} 사용량 ({data[selectedTab].unit})
@@ -215,27 +209,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
   },
-  arrow: {
-    bottom: 11, // Position it below the tabs
-    width: 0,
-    height: 0,
-    borderLeftWidth: 15,
-    borderRightWidth: 15,
-    borderTopWidth: 15,
-    borderStyle: "solid",
-    backgroundColor: "transparent",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderTopColor: "#4CAF50",
-    zIndex: 3,
-  },
   dataContainer: {
     backgroundColor: "#F5F5F5",
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
     zIndex: 1,
-    bottom: 50,
+    bottom: 30,
   },
   dataLabel: {
     fontSize: 14,
