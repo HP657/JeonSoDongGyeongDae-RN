@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import React, { useState } from "react";
 import {
   View,
@@ -8,14 +10,27 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { API_URL } from "@env";
 
 const LoginPage = ({ navigation }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    console.log(`Logging in with id: ${id} and password: ${password}`);
-    navigation.replace("Main");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/sales/auth/login`, {
+        user_id: id,
+        user_pw: password,
+      });
+
+      const { access_token } = response.data;
+      await AsyncStorage.setItem("accessToken", access_token);
+
+      console.log("로그인 성공, 토큰 저장 완료");
+      navigation.replace("Main");
+    } catch (error) {
+      console.log("로그인 실패:", error);
+    }
   };
 
   const navigate_SignUp = () => {
