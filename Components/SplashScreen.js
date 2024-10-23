@@ -19,7 +19,11 @@ export default function SplashScreen({ navigation }) {
         useNativeDriver: false,
       }),
     ]).start(() => {
-      navigation.replace("Main");
+      if (true) {
+        navigation.replace("Login");
+      } else {
+        navigation.replace("Main");
+      }
     });
   }, [fillAnimation, imageAnimation, navigation]);
 
