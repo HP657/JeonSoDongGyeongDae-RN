@@ -43,12 +43,12 @@ export default function HomePage() {
               style={styles.headerImage}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image
               source={require("./../assets/user-icon.png")}
               style={styles.headerUserImage}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View>
           <View style={styles.row}>

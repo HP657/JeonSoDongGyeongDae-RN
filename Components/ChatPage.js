@@ -80,7 +80,7 @@ export default function Chatroom() {
               style={styles.headerImage}
             />
           </TouchableOpacity>
-          <View style={styles.headerRight}>
+          {/* <View style={styles.headerRight}>
             <TouchableOpacity onPress={() => alert("렌즈")}>
               <Image
                 source={require("./../assets/lens.png")}
@@ -93,7 +93,7 @@ export default function Chatroom() {
                 style={styles.headerImageBell}
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.chatContainer}>

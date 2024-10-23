@@ -194,7 +194,7 @@ const RankingPage = () => {
       </View>
       <Text style={styles.count}>{item.count}개</Text>
       <View style={styles.changeContainer}>
-        {item.change > 0 ? (
+        {/* {item.change > 0 ? (
           <Text style={[styles.changeText, { color: "red" }]}>
             {"▲ "}
             {item.change}
@@ -206,7 +206,7 @@ const RankingPage = () => {
           </Text>
         ) : (
           <Text style={[styles.changeText, { color: "black" }]}>{"--"}</Text>
-        )}
+        )} */}
       </View>
     </View>
   );
@@ -237,7 +237,7 @@ const RankingPage = () => {
             style={styles.runningIcon}
           />
         </View>
-        <View style={styles.tabs}>
+        {/* <View style={styles.tabs}>
           <Text
             style={[styles.tab, selectedTab === "기업" && styles.activeTab]}
             onPress={() => setSelectedTab("기업")}
@@ -256,7 +256,7 @@ const RankingPage = () => {
           >
             개인
           </Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.bg}>
         <View style={styles.myRank}>
@@ -265,7 +265,7 @@ const RankingPage = () => {
             <Text style={styles.myRankPosition}>{myRankData.rank}등</Text>
             <Text style={styles.myRankCount}>{myRankData.count}개</Text>
           </View>
-          <View style={styles.changeContainer}>
+          {/* <View style={styles.changeContainer}>
             {myRankData.change > 0 ? (
               <Text style={[styles.changeText, { color: "red" }]}>
                 {"▲ "}
@@ -281,7 +281,7 @@ const RankingPage = () => {
                 {"--"}
               </Text>
             )}
-          </View>
+          </View> */}
         </View>
         <FlatList
           data={data}
