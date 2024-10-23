@@ -11,6 +11,8 @@ import Footer from "./Components/Footer";
 import SplashScreen from "./Components/SplashScreen";
 import { useCameraPermissions } from "expo-camera";
 import MissionPage from "./Components/MissionPage";
+import LoginPage from "./Components/LoginPage";
+import SignUpPage from "./Components/SignUpPage";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,7 +32,6 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="Mission"
-        // component={Camera}
         component={MissionPage}
         options={{ tabBarLabel: "미션" }}
       />
@@ -73,6 +74,8 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="SignUp" component={SignUpPage} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
