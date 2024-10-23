@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
-  View,
   Text,
+  View,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -9,23 +9,27 @@ import {
   Keyboard,
 } from "react-native";
 
-const LoginPage = ({ navigation }) => {
+const SignUpPage = ({ navigation }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [companyCode, setCompanyCode] = useState("");
 
-  const handleLogin = () => {
-    console.log(`Logging in with id: ${id} and password: ${password}`);
-    navigation.replace("Main");
+  const handleSignUp = () => {
+    console.log(
+      `Signing up with id: ${id}, password: ${password}, company code: ${companyCode}`
+    );
+    navigation.replace("Login");
   };
 
-  const navigate_SignUp = () => {
-    navigation.replace("SignUp");
+  const navigate_Login = () => {
+    navigation.replace("Login");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Text style={styles.title}>로그인 페이지</Text>
+        <Text style={styles.title}>회원가입 페이지</Text>
         <TextInput
           style={styles.input}
           placeholder="ID"
@@ -39,15 +43,28 @@ const LoginPage = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
         />
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry={true}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Company Code"
+          value={companyCode}
+          onChangeText={(text) => setCompanyCode(text)}
+        />
+        <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+          <Text style={styles.signUpButtonText}>회원가입</Text>
         </TouchableOpacity>
         <View style={styles.row}>
-          <Text style={styles.signUpText}>회원이 아니시라면 </Text>
-          <TouchableOpacity onPress={navigate_SignUp}>
-            <Text style={styles.signUpText_navigater}>회원가입</Text>
+          <Text style={styles.loginText}>이미 회원이시라면 </Text>
+          <TouchableOpacity onPress={navigate_Login}>
+            <Text style={styles.loginText_navigater}>로그인</Text>
           </TouchableOpacity>
-          <Text style={styles.signUpText}> 하러가기</Text>
+          <Text style={styles.loginText}> 하러가기</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -76,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 10,
   },
-  loginButton: {
+  signUpButton: {
     width: 300,
     height: 40,
     backgroundColor: "#007bff",
@@ -85,23 +102,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  loginButtonText: {
+  signUpButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },
   row: {
     flexDirection: "row",
-    marginTop: 10,
     marginLeft: 75,
+    marginTop: 10,
   },
-  signUpText: {
+  loginText: {
     color: "#767676",
   },
-  signUpText_navigater: {
+  loginText_navigater: {
     color: "#000",
     marginTop: 1,
   },
 });
 
-export default LoginPage;
+export default SignUpPage;
