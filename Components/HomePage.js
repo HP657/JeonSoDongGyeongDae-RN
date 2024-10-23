@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import {
   Image,
@@ -10,7 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-export default function HomePage() {
+export default function HomePage({ navigation }) {
   const [selectedTab, setSelectedTab] = useState(0); // State for selected tab
   const [inputValue, setInputValue] = useState(""); // State for user input
   const UserInfoData = {
@@ -33,6 +34,17 @@ export default function HomePage() {
     return (parseFloat(value) * factor).toFixed(2);
   };
 
+  const handleLogout = async () => {
+    try {
+      // AsyncStorage에서 토큰 삭제
+      await AsyncStorage.removeItem("accessToken");
+      // 이후 다른 화면으로 이동 (예: Login 화면)
+      navigation.replace("Login");
+    } catch (error) {
+      console.log("로그아웃 중 오류 발생:", error);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -42,6 +54,9 @@ export default function HomePage() {
               source={require("./../assets/Logo.png")}
               style={styles.headerImage}
             />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleLogout}>
+            <Text>로그아웃</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity>
             <Image
