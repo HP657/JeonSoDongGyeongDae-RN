@@ -8,18 +8,34 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { API_URL } from "@env";
 
 const SignUpPage = ({ navigation }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [companyCode, setCompanyCode] = useState("");
+  const [username, setUsername] = useState("");
 
-  const handleSignUp = () => {
-    console.log(
-      `Signing up with id: ${id}, password: ${password}, company code: ${companyCode}`
-    );
-    navigation.replace("Login");
+  const handleSignUp = async () => {
+    try {
+      const SignUp_response = await axios.post(
+        `${API_URL}/sales/auth/register`,
+        {
+          user_id: id,
+          role_type: "sales",
+          user_pw: password,
+          user_name: username,
+          user_code: companyCode,
+          user_role: "사원",
+        }
+      );
+      console.log(SignUp_response.data);
+      navigation.replace("Login");
+    } catch (error) {
+      console.error(error);
+      alert("뭔가 잘못됨");
+    }
   };
 
   const navigate_Login = () => {
@@ -35,6 +51,12 @@ const SignUpPage = ({ navigation }) => {
           placeholder="ID"
           value={id}
           onChangeText={(text) => setId(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="UserName"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
         />
         <TextInput
           style={styles.input}
