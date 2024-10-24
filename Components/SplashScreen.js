@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { StyleSheet, View, Animated } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage 임포트
 import splashImage from "./../assets/co2icon.png";
+import TokenValidation from "./token/TokenValidation";
 
 export default function SplashScreen({ navigation }) {
   const fillAnimation = useRef(new Animated.Value(0)).current;
@@ -27,11 +28,13 @@ export default function SplashScreen({ navigation }) {
           }),
         ]).start(() => {
           //토큰이 유효 한지 체크 해야될듯
-          if (token) {
-            navigation.replace("Main");
-          } else {
-            navigation.replace("Login");
-          }
+          TokenValidation(token).then((isValid) => {
+            if (!isValid) {
+              navigation.replace("Login");
+            } else {
+              navigation.replace("Main");
+            }
+          });
         });
       } catch (error) {
         console.log("토큰 확인 중 오류 발생:", error);
