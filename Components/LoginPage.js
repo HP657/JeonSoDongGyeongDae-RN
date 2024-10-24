@@ -55,7 +55,7 @@ const LoginPage = ({ navigation }) => {
           secureTextEntry={true}
         />
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text style={styles.loginButtonText}>로그인</Text>
         </TouchableOpacity>
         <View style={styles.row}>
           <Text style={styles.signUpText}>회원이 아니시라면 </Text>
