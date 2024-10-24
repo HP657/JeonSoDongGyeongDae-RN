@@ -1,171 +1,60 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet } from "react-native";
-
-const data = [
-  {
-    id: 1,
-    name: "정과장",
-    department: "AI 개발 1팀",
-    count: 27,
-    change: 3,
-    rank: 1,
-  },
-  {
-    id: 2,
-    name: "이대리",
-    department: "마케팅 2팀",
-    count: 21,
-    change: -2,
-    rank: 2,
-  },
-  {
-    id: 3,
-    name: "김사원",
-    department: "AI 개발 2팀",
-    count: 13,
-    change: 1,
-    rank: 3,
-  },
-  {
-    id: 4,
-    name: "천연 수세미",
-    department: "마케팅 3팀",
-    count: 11,
-    change: -1,
-    rank: 4,
-  },
-  {
-    id: 5,
-    name: "정대리",
-    department: "마케팅 인사팀",
-    count: 10,
-    change: 1,
-    rank: 5,
-  },
-  {
-    id: 6,
-    name: "탄소시리",
-    department: "환경 마케팅 팀",
-    count: 9,
-    change: -3,
-    rank: 6,
-  },
-  {
-    id: 7,
-    name: "윤과장",
-    department: "AI 개발 1팀",
-    count: 9,
-    change: 0,
-    rank: 7,
-  },
-  {
-    id: 8,
-    name: "탄소발자국",
-    department: "환경 마케팅 팀",
-    count: 7,
-    change: 1,
-    rank: 8,
-  },
-  {
-    id: 9,
-    name: "이산화",
-    department: "마케팅 인사팀",
-    count: 7,
-    change: -1,
-    rank: 9,
-  },
-  {
-    id: 10,
-    name: "박대리",
-    department: "AI 개발 3팀",
-    count: 6,
-    change: -2,
-    rank: 10,
-  },
-  {
-    id: 11,
-    name: "최사원",
-    department: "마케팅 1팀",
-    count: 6,
-    change: 0,
-    rank: 11,
-  },
-  {
-    id: 12,
-    name: "김과장",
-    department: "AI 개발 2팀",
-    count: 5,
-    change: 1,
-    rank: 12,
-  },
-  {
-    id: 13,
-    name: "이사원",
-    department: "마케팅 2팀",
-    count: 5,
-    change: -2,
-    rank: 13,
-  },
-  {
-    id: 14,
-    name: "정사원",
-    department: "AI 개발 1팀",
-    count: 4,
-    change: 1,
-    rank: 14,
-  },
-  {
-    id: 15,
-    name: "박과장",
-    department: "환경 마케팅 팀",
-    count: 4,
-    change: 0,
-    rank: 15,
-  },
-  {
-    id: 16,
-    name: "최대리",
-    department: "마케팅 3팀",
-    count: 3,
-    change: 1,
-    rank: 16,
-  },
-  {
-    id: 17,
-    name: "김대리",
-    department: "AI 개발 3팀",
-    count: 3,
-    change: -1,
-    rank: 17,
-  },
-  {
-    id: 18,
-    name: "이과장",
-    department: "마케팅 인사팀",
-    count: 2,
-    change: 1,
-    rank: 18,
-  },
-  {
-    id: 19,
-    name: "정사원",
-    department: "환경 마케팅 팀",
-    count: 2,
-    change: -3,
-    rank: 19,
-  },
-  {
-    id: 20,
-    name: "박사원",
-    department: "AI 개발 2팀",
-    count: 1,
-    change: -1,
-    rank: 20,
-  },
-];
+import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RankingPage = () => {
-  const [selectedTab, setSelectedTab] = useState("개인");
+  const [userData, setUserData] = useState(null);
+  const [myData, setMyData] = useState(null);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("accessToken");
+      setToken(token);
+
+      console.log(token);
+      if (token) {
+        try {
+          const userResponse = await axios(
+            `${API_URL}/component/ranking/get/rankings`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const modifiedData = userResponse.data.map((item) => ({
+            ...item,
+            id: item.user_id,
+            rank: item.ranking,
+          }));
+          setUserData(modifiedData);
+          console.log("User Data:", modifiedData); // Log the fetched user data
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+
+        try {
+          const myResponse = await axios(
+            `${API_URL}/component/ranking/get/my`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setMyData(myResponse.data);
+          console.log("My Data:", myResponse.data); // Log the fetched my data
+        } catch (error) {
+          console.error("Error fetching my data:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []); // Run this effect once on component mount
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -189,36 +78,13 @@ const RankingPage = () => {
       )}
       {item.rank > 3 && <Text style={styles.rank}>{item.rank}</Text>}
       <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name}>{item.id}</Text>
         <Text style={styles.department}>{item.department}</Text>
       </View>
       <Text style={styles.count}>{item.count}개</Text>
-      <View style={styles.changeContainer}>
-        {/* {item.change > 0 ? (
-          <Text style={[styles.changeText, { color: "red" }]}>
-            {"▲ "}
-            {item.change}
-          </Text>
-        ) : item.change < 0 ? (
-          <Text style={[styles.changeText, { color: "blue" }]}>
-            {"▼ "}
-            {Math.abs(item.change)}
-          </Text>
-        ) : (
-          <Text style={[styles.changeText, { color: "black" }]}>{"--"}</Text>
-        )} */}
-      </View>
     </View>
   );
 
-  const myRankData = {
-    id: 0,
-    name: "정과장",
-    department: "AI 개발 1팀",
-    count: 27,
-    change: 3,
-    rank: 1,
-  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -237,59 +103,22 @@ const RankingPage = () => {
             style={styles.runningIcon}
           />
         </View>
-        {/* <View style={styles.tabs}>
-          <Text
-            style={[styles.tab, selectedTab === "기업" && styles.activeTab]}
-            onPress={() => setSelectedTab("기업")}
-          >
-            기업
-          </Text>
-          <Text
-            style={[styles.tab, selectedTab === "부서" && styles.activeTab]}
-            onPress={() => setSelectedTab("부서")}
-          >
-            부서
-          </Text>
-          <Text
-            style={[styles.tab, selectedTab === "개인" && styles.activeTab]}
-            onPress={() => setSelectedTab("개인")}
-          >
-            개인
-          </Text>
-        </View> */}
       </View>
       <View style={styles.bg}>
         <View style={styles.myRank}>
           <View style={styles.myRankInfo}>
             <Text style={styles.myRankText}>내 순위</Text>
-            <Text style={styles.myRankPosition}>{myRankData.rank}등</Text>
-            <Text style={styles.myRankCount}>{myRankData.count}개</Text>
+            <Text style={styles.myRankPosition}>{myData?.ranking}등</Text>
+            <Text style={styles.myRankCount}>{myData?.count}개</Text>
           </View>
-          {/* <View style={styles.changeContainer}>
-            {myRankData.change > 0 ? (
-              <Text style={[styles.changeText, { color: "red" }]}>
-                {"▲ "}
-                {myRankData.change}
-              </Text>
-            ) : myRankData.change < 0 ? (
-              <Text style={[styles.changeText, { color: "blue" }]}>
-                {"▼ "}
-                {Math.abs(myRankData.change)}
-              </Text>
-            ) : (
-              <Text style={[styles.changeText, { color: "black" }]}>
-                {"--"}
-              </Text>
-            )}
-          </View> */}
         </View>
         <FlatList
-          data={data}
+          data={userData}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
           ListFooterComponent={
             <View style={{ marginBottom: 10, marginTop: 10 }} />
-          } // Add margin at the bottom
+          }
         />
       </View>
     </View>
@@ -338,22 +167,9 @@ const styles = StyleSheet.create({
     color: "green",
     fontWeight: "bold",
   },
-  tabs: {
-    flexDirection: "row",
-    marginTop: 20,
-  },
-  tab: {
-    fontSize: 16,
-    marginHorizontal: 30,
-    color: "gray",
-  },
-  activeTab: {
-    color: "green",
-    fontWeight: "bold",
-  },
   bg: {
     backgroundColor: "#f5f5f5",
-    flex: 1, // Allow the background to take full height
+    flex: 1,
   },
   myRank: {
     flexDirection: "row",
@@ -383,12 +199,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
-    marginLeft: 145,
+    marginLeft: 193,
   },
   myRankInfo: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1, // Allow it to take available space
+    flex: 1,
   },
   item: {
     flexDirection: "row",
@@ -396,8 +212,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: "#fff",
-    height: 45, // Set a fixed height for consistency
-    marginHorizontal: 10, // Add horizontal margin for spacing
+    height: 45,
+    marginHorizontal: 10,
     marginTop: 4,
   },
   rank: {
@@ -419,14 +235,6 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   count: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  changeContainer: {
-    width: 50, // Consistent width for better alignment
-    alignItems: "center", // Center text vertically and horizontally
-  },
-  changeText: {
     fontSize: 16,
     fontWeight: "bold",
   },
