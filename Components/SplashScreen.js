@@ -26,7 +26,7 @@ export default function SplashScreen({ navigation }) {
             useNativeDriver: false,
           }),
         ]).start(() => {
-          // 토큰이 있으면 Main으로, 없으면 Login으로 이동
+          //토큰이 유효 한지 체크 해야될듯
           if (token) {
             navigation.replace("Main");
           } else {
