@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import axios from "axios";
 
 function CameraPage({ setShowCameraPage }) {
   const [facing, setFacing] = useState("back");
@@ -30,11 +31,37 @@ function CameraPage({ setShowCameraPage }) {
     );
   }
 
+  // async function takePicture() {
+  //   if (cameraRef.current) {
+  //     const photo = await cameraRef.current.takePictureAsync();
+  //     setPhotoUri(photo.uri);
+  //     console.log(photo.uri);
+  //   }
+  // }
+
   async function takePicture() {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoUri(photo.uri);
-      alert(photoUri);
+      console.log(photo.uri);
+
+      const formData = new FormData();
+      formData.append("file", {
+        uri: fileUri,
+        name: "photo.jpg",
+        type: "image/jpg",
+      });
+
+      try {
+        const response = await axios.post("", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Upload success:", response.data);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
     }
   }
 
