@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import getAccessToken from "./token/getAccessToken";
 
 export default function HomePage({ navigation }) {
   const [selectedTab, setSelectedTab] = useState(0); // State for selected tab
@@ -19,9 +20,11 @@ export default function HomePage({ navigation }) {
   };
 
   const tabs = ["전기", "가스", "수도", "교통", "폐기물"];
-  const tabWidth = 300 / tabs.length;
 
-  // Example data for each tab
+  getAccessToken().then((token) => {
+    console.log("JWT 토큰:", token);
+  });
+
   const data = [
     { unit: "kwh", factor: 0.478 },
     { unit: "m³", factor: 2.4 },
