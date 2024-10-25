@@ -23,6 +23,7 @@ const LoginPage = ({ navigation }) => {
         user_pw: password,
       });
 
+      await AsyncStorage.removeItem("accessToken");
       const { access_token } = response.data;
       await AsyncStorage.setItem("accessToken", access_token);
 
