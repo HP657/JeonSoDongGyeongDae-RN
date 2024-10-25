@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function CameraPage({ setShowCameraPage }) {
   const [facing, setFacing] = useState("back");
@@ -31,34 +33,38 @@ function CameraPage({ setShowCameraPage }) {
     );
   }
 
-  // async function takePicture() {
-  //   if (cameraRef.current) {
-  //     const photo = await cameraRef.current.takePictureAsync();
-  //     setPhotoUri(photo.uri);
-  //     console.log(photo.uri);
-  //   }
-  // }
-
   async function takePicture() {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoUri(photo.uri);
       console.log(photo.uri);
 
-      const formData = new FormData();
-      formData.append("file", {
-        uri: fileUri,
-        name: "photo.jpg",
-        type: "image/jpg",
-      });
-
       try {
-        const response = await axios.post("", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log("Upload success:", response.data);
+        const token = await AsyncStorage.getItem("accessToken");
+
+        if (token) {
+          // FormData 생성하여 이미지 파일 전송
+          const formData = new FormData();
+          formData.append("file", {
+            uri: photo.uri,
+            name: "photo.jpg",
+            type: "image/jpeg",
+          });
+
+          const response = await axios.post(
+            `${API_URL}/component/image-ai/predict`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("Upload success:", response.data);
+        } else {
+          console.log("No access token found.");
+        }
       } catch (error) {
         console.error("Upload failed:", error);
       }
@@ -103,18 +109,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    flexDirection: "row", // Align items in a row
-    alignItems: "center", // Center items vertically
-    justifyContent: "space-between", // Space between items
-    paddingHorizontal: 16, // Add horizontal padding
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
     marginBottom: 15,
     marginTop: 50,
   },
   headerText: {
     fontSize: 16,
     fontWeight: "bold",
-    flex: 1, // Allow the text to take up available space
-    textAlign: "center", // Center the text
+    flex: 1,
+    textAlign: "center",
     right: 10,
   },
   message: {
