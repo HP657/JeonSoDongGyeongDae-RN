@@ -13,59 +13,7 @@ import {
 
 export default function Chatroom() {
   const [question, setQuestion] = React.useState("");
-  const chatData = [
-    {
-      id: 1,
-      type: "user",
-      message:
-        "부서에서 사용 중인 물품의 탄소 발자국을 줄이는 방법은 무엇인가요?",
-    },
-    {
-      id: 2,
-      type: "response",
-      message:
-        "부서에서 사용 중인 물품의 탄소 발자국을 줄이기 위해서는 재활용 및 재사용을 장려하고, 친환경 제품을 선택하며, 공유 경제를 활용하여 소모품 사용을 줄이는 방법 등이 있습니다.",
-    },
-    {
-      id: 3,
-      type: "user",
-      message: "우리 부서의 탄소 배출량을 측정하는 방법은 무엇인가요?",
-    },
-    {
-      id: 4,
-      type: "response",
-      message:
-        "부서의 탄소 배출량을 측정하려면 에너지 사용, 교통 및 출장, 폐기물 처리 등의 데이터를 수집하고, 배출 계수를 적용해 직접(Scope 1), 간접(Scope 2), 기타 간접(Scope 3) 배출량을 계산합니다.",
-    },
-    {
-      id: 5,
-      type: "response",
-      message:
-        "그런 다음 이를 합산하여 총 탄소 배출량을 도출하고 정기적으로 모니터링합니다.",
-    },
-    {
-      id: 6,
-      type: "user",
-      message: "탄소 배출량을 줄이기 위한 구체적인 행동은 무엇인가요?",
-    },
-    {
-      id: 7,
-      type: "response",
-      message:
-        "탄소 배출량을 줄이기 위해 대중교통 이용, 에너지 효율적인 기기 사용, 식물 기반 식단으로의 전환 등을 고려할 수 있습니다.",
-    },
-    {
-      id: 8,
-      type: "user",
-      message: "재활용을 잘하기 위한 팁이 있을까요?",
-    },
-    {
-      id: 9,
-      type: "response",
-      message:
-        "재활용을 잘하기 위해서는 분리배출을 철저히 하고, 재활용 가능한 품목을 잘 알고, 지역 재활용 프로그램에 참여하는 것이 중요합니다.",
-    },
-  ];
+  const chatData = [];
 
   return (
     <KeyboardAvoidingView
