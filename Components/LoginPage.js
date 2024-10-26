@@ -16,7 +16,7 @@ const LoginPage = ({ navigation }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  async function handleLogin() {
     try {
       const response = await axios.post(`${API_URL}/sales/auth/login`, {
         user_id: id,
@@ -32,7 +32,7 @@ const LoginPage = ({ navigation }) => {
     } catch (error) {
       console.log("로그인 실패:", error);
     }
-  };
+  }
 
   const navigate_SignUp = () => {
     navigation.replace("SignUp");

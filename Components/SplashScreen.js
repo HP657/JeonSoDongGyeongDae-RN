@@ -1,6 +1,8 @@
+import axios from "axios";
+import { API_URL } from "@env";
 import React, { useEffect, useRef } from "react";
 import { StyleSheet, View, Animated } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage 임포트
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import splashImage from "./../assets/co2icon.png";
 import TokenValidation from "./token/TokenValidation";
 
@@ -11,34 +13,35 @@ export default function SplashScreen({ navigation }) {
   useEffect(() => {
     const checkTokenAndNavigate = async () => {
       try {
-        // AsyncStorage에서 토큰 불러오기
         const token = await AsyncStorage.getItem("accessToken");
+        console.log(token);
 
         // 애니메이션 시작
         Animated.parallel([
           Animated.timing(fillAnimation, {
             toValue: 1,
             duration: 2000,
-            useNativeDriver: false,
+            useNativeDriver: true, // 애니메이션 성능 최적화
           }),
           Animated.timing(imageAnimation, {
             toValue: 1,
             duration: 2000,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
-        ]).start(() => {
-          //토큰이 유효 한지 체크 해야될듯
-          TokenValidation(token).then((isValid) => {
-            if (!isValid) {
-              navigation.replace("Login");
-            } else {
-              navigation.replace("Main");
-            }
-          });
+        ]).start(async () => {
+          // async 추가
+          // 애니메이션 완료 후 토큰 검증
+          const isValid = await TokenValidation(token); // isValid로 결과 받기
+          console.log(isValid);
+
+          if (!isValid) {
+            navigation.replace("Login");
+          } else {
+            navigation.replace("Main");
+          }
         });
       } catch (error) {
         console.log("토큰 확인 중 오류 발생:", error);
-        // 오류가 발생한 경우 Login으로 이동
         navigation.replace("Login");
       }
     };

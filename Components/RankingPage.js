@@ -10,7 +10,7 @@ const RankingPage = () => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       const token = await AsyncStorage.getItem("accessToken");
       setToken(token);
 
@@ -51,7 +51,7 @@ const RankingPage = () => {
           console.error("Error fetching my data:", error);
         }
       }
-    };
+    }
 
     fetchData();
   }, []); // Run this effect once on component mount
