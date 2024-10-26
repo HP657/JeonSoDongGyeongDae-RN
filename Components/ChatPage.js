@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,11 +11,53 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Chatroom() {
-  const [question, setQuestion] = React.useState("");
-  const chatData = [];
+  const [question, setQuestion] = useState("");
+  const [chatData, setChatData] = useState([]);
 
+  async function requestChat() {
+    setChatData((prevData) => [
+      ...prevData,
+      {
+        id: `user-${chatData.length}-${Date.now()}`,
+        type: "user",
+        message: question,
+      },
+    ]);
+    const token = await AsyncStorage.getItem("accessToken");
+    console.log(token);
+    try {
+      const response = await axios.post(
+        `${API_URL}/component/chat-bot/chat`,
+        {
+          user_text: question,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      const chatBotResponse =
+        typeof response.data.chatBot === "object"
+          ? response.data.chatBot.message
+          : response.data.chatBot;
+      setChatData((prevData) => [
+        ...prevData,
+        {
+          id: `response-${chatData.length}-${Date.now()}`,
+          type: "response",
+          message: chatBotResponse,
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -77,6 +120,7 @@ export default function Chatroom() {
           />
           <TouchableOpacity
             onPress={() => {
+              requestChat();
               setQuestion("");
             }}
             style={styles.submitButton}
