@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import {
   Button,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -43,13 +44,15 @@ function CameraPage({ setShowCameraPage }) {
         const token = await AsyncStorage.getItem("accessToken");
 
         if (token) {
-          // FormData 생성하여 이미지 파일 전송
-          const formData = new FormData();
-          formData.append("file", {
-            uri: photo.uri,
-            name: "photo.jpg",
+          const uri = photo.uri;
+          const image = {
+            name: `${Date.now()}.jpg`,
             type: "image/jpeg",
-          });
+            uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
+          };
+          console.log(image.uri);
+          const formData = new FormData();
+          formData.append("file", image);
 
           const response = await axios.post(
             `${API_URL}/component/image-ai/predict`,
