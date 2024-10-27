@@ -10,7 +10,7 @@ import {
 import CameraPage from "./CameraPage";
 
 const MainMissionPage = ({ setShowCameraPage }) => {
-  const [activeTab, setActiveTab] = useState("일일");
+  // const [activeTab, setActiveTab] = useState("일일");
   const missions = [
     {
       missionclass: "에너지",
@@ -69,7 +69,7 @@ const MainMissionPage = ({ setShowCameraPage }) => {
           </View>
         </TouchableOpacity>
         <View style={styles.tabContainer}>
-          <View style={styles.tabWrapper}>
+          {/* <View style={styles.tabWrapper}>
             {["일일", "주간", "월간"].map((tab) => (
               <TouchableOpacity
                 key={tab}
@@ -88,7 +88,7 @@ const MainMissionPage = ({ setShowCameraPage }) => {
                 </Text>
               </TouchableOpacity>
             ))}
-          </View>
+          </View> */}
         </View>
         <View style={styles.missionList}>
           {missions.map((mission, index) => (
