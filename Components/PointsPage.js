@@ -1,5 +1,8 @@
+import axios from "axios";
 import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
-
+import { API_URL } from "@env";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const coupons = [
   {
     detail: "모바일 문화상품권",
@@ -43,10 +46,31 @@ const products = [
 ];
 
 const PointsPage = () => {
+  const [myPoint, setMyPoint] = useState(0);
+  useEffect(() => {
+    async function getMyPoint() {
+      const token = await AsyncStorage.getItem("accessToken");
+      if (token) {
+        try {
+          const response = await axios.get(`${API_URL}/sales/point/get`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setMyPoint(response.data.data.point);
+        } catch (error) {
+          console.error("Failed to fetch my point:", error);
+        }
+      }
+    }
+    getMyPoint();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>포인트 상점</Text>
+        <Text style={styles.myPoint}>보유중인 포인트 : {myPoint}</Text>
       </View>
       <ScrollView>
         <Text style={styles.sectionTitle}>인기 상품권</Text>
@@ -184,7 +208,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontWeight: "bold",
-    fontSize: "16",
+    fontSize: 16,
     marginLeft: 15,
   },
   coupon_itemContainer: {
@@ -196,6 +220,12 @@ const styles = StyleSheet.create({
   contour: {
     marginTop: 10,
     marginBottom: 10,
+  },
+  myPoint: {
+    marginLeft: 10,
+    marginBottom: 10,
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
 
