@@ -1,60 +1,47 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet } from "react-native";
-import { API_URL } from "@env";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "./API/API";
 
 const RankingPage = () => {
   const [userData, setUserData] = useState(null);
   const [myData, setMyData] = useState(null);
-  const [token, setToken] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
-      const token = await AsyncStorage.getItem("accessToken");
-      setToken(token);
+      try {
+        const userResponse = await API(
+          "/component/ranking/get/rankings",
+          "GET",
+          null,
+          true
+        );
+        const modifiedData = userResponse.data.map((item) => ({
+          ...item,
+          id: item.user_id,
+          rank: item.ranking,
+        }));
+        setUserData(modifiedData);
+        console.log("User Data:", modifiedData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
 
-      console.log(token);
-      if (token) {
-        try {
-          const userResponse = await axios(
-            `${API_URL}/component/ranking/get/rankings`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const modifiedData = userResponse.data.map((item) => ({
-            ...item,
-            id: item.user_id,
-            rank: item.ranking,
-          }));
-          setUserData(modifiedData);
-          console.log("User Data:", modifiedData); // Log the fetched user data
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-
-        try {
-          const myResponse = await axios(
-            `${API_URL}/component/ranking/get/my`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setMyData(myResponse.data);
-          console.log("My Data:", myResponse.data); // Log the fetched my data
-        } catch (error) {
-          console.error("Error fetching my data:", error);
-        }
+      try {
+        const myResponse = await API(
+          "/component/ranking/get/my",
+          "GET",
+          null,
+          true
+        );
+        setMyData(myResponse.data);
+        console.log("My Data:", myResponse.data);
+      } catch (error) {
+        console.error("Error fetching my data:", error);
       }
     }
 
     fetchData();
-  }, []); // Run this effect once on component mount
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -124,6 +111,8 @@ const RankingPage = () => {
     </View>
   );
 };
+
+// 나머지 스타일 코드는 동일
 
 const styles = StyleSheet.create({
   container: {

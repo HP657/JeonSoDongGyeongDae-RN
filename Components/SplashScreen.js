@@ -1,5 +1,3 @@
-import axios from "axios";
-import { API_URL } from "@env";
 import React, { useEffect, useRef } from "react";
 import { StyleSheet, View, Animated } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";

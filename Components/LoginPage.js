@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import React, { useState } from "react";
 import {
   View,
@@ -10,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { API_URL } from "@env";
+import API from "./API/API";
 
 const LoginPage = ({ navigation }) => {
   const [id, setId] = useState("");
@@ -18,7 +17,7 @@ const LoginPage = ({ navigation }) => {
 
   async function handleLogin() {
     try {
-      const response = await axios.post(`${API_URL}/sales/auth/login`, {
+      const response = await API("/sales/auth/login", "POST", {
         user_id: id,
         user_pw: password,
       });

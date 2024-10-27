@@ -3,15 +3,12 @@ import { useRef, useState } from "react";
 import {
   Button,
   Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import axios from "axios";
-import { API_URL } from "@env";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "./API/API";
 
 function CameraPage({ setShowCameraPage }) {
   const [facing, setFacing] = useState("back");
@@ -41,33 +38,23 @@ function CameraPage({ setShowCameraPage }) {
       console.log(photo.uri);
 
       try {
-        const token = await AsyncStorage.getItem("accessToken");
+        const uri = photo.uri;
+        const image = {
+          name: `${Date.now()}.jpg`,
+          type: "image/jpeg",
+          uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
+        };
+        console.log(image.uri);
+        const formData = new FormData();
+        formData.append("file", image);
 
-        if (token) {
-          const uri = photo.uri;
-          const image = {
-            name: `${Date.now()}.jpg`,
-            type: "image/jpeg",
-            uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
-          };
-          console.log(image.uri);
-          const formData = new FormData();
-          formData.append("file", image);
-
-          const response = await axios.post(
-            `${API_URL}/component/image-ai/predict`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          console.log("Upload success:", response.data);
-        } else {
-          console.log("No access token found.");
-        }
+        const response = await API(
+          "/component/image-ai/predict",
+          "POST",
+          formData,
+          true
+        );
+        console.log("Upload success:", response.data);
       } catch (error) {
         console.error("Upload failed:", error);
       }

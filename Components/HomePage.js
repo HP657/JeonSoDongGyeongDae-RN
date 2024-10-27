@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Image,
@@ -11,11 +10,11 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { API_URL } from "@env";
+import API from "./API/API";
 
 export default function HomePage({ navigation }) {
-  const [selectedTab, setSelectedTab] = useState(0); // State for selected tab
-  const [inputValue, setInputValue] = useState(""); // State for user input
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [inputValue, setInputValue] = useState("");
   const [userInfo, setUserInfo] = useState("");
 
   useEffect(() => {
@@ -23,11 +22,7 @@ export default function HomePage({ navigation }) {
       const token = await AsyncStorage.getItem("accessToken");
       if (token) {
         try {
-          const response = await axios.get(`${API_URL}/sales/point/get`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await API("/sales/point/get", "GET", null, true);
           setUserInfo(response.data.data.user_id);
         } catch (error) {
           console.error("Failed to fetch my point:", error);

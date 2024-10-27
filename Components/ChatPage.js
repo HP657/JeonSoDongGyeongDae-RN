@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -11,8 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "./API/API";
 
 export default function Chatroom() {
   const [question, setQuestion] = useState("");
@@ -30,16 +29,13 @@ export default function Chatroom() {
     const token = await AsyncStorage.getItem("accessToken");
     console.log(token);
     try {
-      const response = await axios.post(
-        `${API_URL}/component/chat-bot/chat`,
+      const response = await API(
+        "/component/chat-bot/chat",
+        "POST",
         {
           user_text: question,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        true
       );
       console.log(response);
       const chatBotResponse =

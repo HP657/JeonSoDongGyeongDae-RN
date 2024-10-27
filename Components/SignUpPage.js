@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { API_URL } from "@env";
+import API from "./API/API";
 
 const SignUpPage = ({ navigation }) => {
   const [id, setId] = useState("");
@@ -19,17 +19,14 @@ const SignUpPage = ({ navigation }) => {
 
   const handleSignUp = async () => {
     try {
-      const SignUp_response = await axios.post(
-        `${API_URL}/sales/auth/register`,
-        {
-          user_id: id,
-          role_type: "sales",
-          user_pw: password,
-          user_name: username,
-          user_code: companyCode,
-          user_role: "사원",
-        }
-      );
+      const SignUp_response = await API("/sales/auth/register", "POST", {
+        user_id: id,
+        role_type: "sales",
+        user_pw: password,
+        user_name: username,
+        user_code: companyCode,
+        user_role: "사원",
+      });
       console.log(SignUp_response.data);
       navigation.replace("Login");
     } catch (error) {
