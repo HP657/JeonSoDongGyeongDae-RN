@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -10,13 +11,31 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { API_URL } from "@env";
 
 export default function HomePage({ navigation }) {
   const [selectedTab, setSelectedTab] = useState(0); // State for selected tab
   const [inputValue, setInputValue] = useState(""); // State for user input
-  const UserInfoData = {
-    userName: "이효준",
-  };
+  const [userInfo, setUserInfo] = useState("");
+
+  useEffect(() => {
+    async function getMyInfo() {
+      const token = await AsyncStorage.getItem("accessToken");
+      if (token) {
+        try {
+          const response = await axios.get(`${API_URL}/sales/point/get`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserInfo(response.data.data.user_id);
+        } catch (error) {
+          console.error("Failed to fetch my point:", error);
+        }
+      }
+    }
+    getMyInfo();
+  }, []);
 
   const tabs = ["전기", "가스", "수도", "교통", "폐기물"];
 
@@ -65,7 +84,7 @@ export default function HomePage({ navigation }) {
         </View>
         <View>
           <View style={styles.row}>
-            <Text style={styles.greetUserName}>{UserInfoData.userName}</Text>
+            <Text style={styles.greetUserName}>{userInfo}</Text>
             <Text style={styles.greetText}>님, 반가워요!</Text>
           </View>
           <Text style={styles.greetContent}>
