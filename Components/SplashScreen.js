@@ -30,7 +30,6 @@ export default function SplashScreen({ navigation }) {
           // async 추가
           // 애니메이션 완료 후 토큰 검증
           const isValid = await TokenValidation(token); // isValid로 결과 받기
-          console.log(isValid);
 
           if (!isValid) {
             navigation.replace("Login");
