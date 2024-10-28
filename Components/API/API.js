@@ -9,11 +9,12 @@ async function API(endpoint, method, body, requireToken = false) {
     const token = await AsyncStorage.getItem("accessToken");
 
     try {
-      const response = await axios.get(`${API_URL}/sales/auth/check/token`, {
+      await axios.get(`${API_URL}/sales/auth/check/token`, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
       console.error("Token check error:", error);
+      return null;
     }
 
     if (token) {
@@ -23,6 +24,9 @@ async function API(endpoint, method, body, requireToken = false) {
 
   const url = `${API_URL}${endpoint}`;
 
+  if (body instanceof FormData) {
+    headers["Content-Type"] = "multipart/form-data";
+  }
   return axios({
     method,
     url,
