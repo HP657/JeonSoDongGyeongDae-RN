@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import {
   Button,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,6 +16,9 @@ function CameraPage({ setShowCameraPage }) {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const [photoUri, setPhotoUri] = useState(null);
+  const [thing, setThing] = useState(null);
+  const [showRedOverlay, setShowRedOverlay] = useState(false);
+  const [showGreenOverlay, setShowGreenOverlay] = useState(false);
 
   if (!permission) {
     return <View />;
@@ -35,7 +39,6 @@ function CameraPage({ setShowCameraPage }) {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoUri(photo.uri);
-      console.log(photo.uri);
 
       try {
         const uri = photo.uri;
@@ -44,7 +47,6 @@ function CameraPage({ setShowCameraPage }) {
           type: "image/jpeg",
           uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
         };
-        console.log(image.uri);
         const formData = new FormData();
         formData.append("file", image);
 
@@ -54,9 +56,18 @@ function CameraPage({ setShowCameraPage }) {
           formData,
           true
         );
-        console.log("Upload success:", response.data);
+        console.log("Upload success:", response.data.prediction);
+        setThing(response.data.prediction);
+
+        if (response.data.prediction.result) {
+          setShowRedOverlay(false);
+          setShowGreenOverlay(true);
+        } else {
+          setShowRedOverlay(true);
+          setShowGreenOverlay(false);
+        }
       } catch (error) {
-        console.error("Upload failed:", error);
+        console.error("Upload failed:", error.message);
       }
     }
   }
@@ -85,6 +96,22 @@ function CameraPage({ setShowCameraPage }) {
             <Text style={styles.text}>사진 찍기</Text>
           </TouchableOpacity>
         </View>
+        {showRedOverlay && (
+          <View
+            style={[
+              styles.overlay,
+              { backgroundColor: "rgba(255, 0, 0, 0.5)" },
+            ]}
+          />
+        )}
+        {showGreenOverlay && (
+          <View
+            style={[
+              styles.overlay,
+              { backgroundColor: "rgba(0, 255, 0, 0.5)" },
+            ]}
+          />
+        )}
       </CameraView>
       {photoUri && (
         <Image source={{ uri: photoUri }} style={styles.previewImage} />
@@ -139,6 +166,14 @@ const styles = StyleSheet.create({
   arrow: {
     width: 24,
     height: 24,
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.5, // Adjust opacity as needed
   },
 });
 
