@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 8,
   },
   productSalePrice: { fontSize: 10, marginLeft: 3, fontWeight: "bold" },
-  contour: { marginVertical: 10, alignSelf: "center" },
+  contour: { marginVertical: 10, alignSelf: "center", width: 1000000 },
 });
 
 export default PointsPage;
