@@ -13,7 +13,7 @@ async function API(endpoint, method, body, requireToken = false) {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
-      console.log("Token check error:", error);
+      console.error("Token check error:", error);
     }
 
     if (token) {
