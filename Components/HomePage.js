@@ -22,8 +22,8 @@ export default function HomePage({ navigation }) {
       const token = await AsyncStorage.getItem("accessToken");
       if (token) {
         try {
-          const response = await API("/sales/point/get", "GET", null, true);
-          setUserInfo(response.data.data.user_id);
+          const response = await API("/sales/auth/user", "GET", null, true);
+          setUserInfo(response.data.detail.user_name);
         } catch (error) {
           console.error("Failed to fetch my point:", error);
         }
