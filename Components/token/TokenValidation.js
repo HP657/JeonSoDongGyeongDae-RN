@@ -8,9 +8,9 @@ async function TokenValidation(accessToken) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return response.data;
+    return response.data.detail.result;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }
