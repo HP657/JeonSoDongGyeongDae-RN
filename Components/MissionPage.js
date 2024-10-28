@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
 import CameraPage from "./CameraPage";
 
 const MainMissionPage = ({ setShowCameraPage }) => {
-  // const [activeTab, setActiveTab] = useState("일일");
   const missions = [
     {
       missionclass: "에너지",
@@ -50,7 +49,7 @@ const MainMissionPage = ({ setShowCameraPage }) => {
         </View>
         <TouchableOpacity
           style={{ zIndex: 0 }}
-          onPress={() => setShowCameraPage(true)} // 카메라 페이지를 표시
+          onPress={() => setShowCameraPage(true)}
         >
           <View style={styles.card}>
             <Image
