@@ -65,8 +65,8 @@ const RankingPage = () => {
       )}
       {item.rank > 3 && <Text style={styles.rank}>{item.rank}</Text>}
       <View style={styles.info}>
-        <Text style={styles.name}>{item.id}</Text>
-        <Text style={styles.department}>{item.department}</Text>
+        <Text style={styles.name}>{item.user_name}</Text>
+        <Text style={styles.department}>{item.user_type}</Text>
       </View>
       <Text style={styles.count}>{item.count}개</Text>
     </View>
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
   },
   myRank: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
     backgroundColor: "#319E49",
@@ -188,12 +187,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
-    marginLeft: 193,
+    marginLeft: "auto",
   },
   myRankInfo: {
     flexDirection: "row",
-    alignItems: "center",
     flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   item: {
     flexDirection: "row",
