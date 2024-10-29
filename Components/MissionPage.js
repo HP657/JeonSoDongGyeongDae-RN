@@ -8,28 +8,34 @@ import {
   ScrollView,
 } from "react-native";
 import CameraPage from "./CameraPage";
+import API from "./API/API";
+
+const missionImages = {
+  tumbler: require("./../assets/tumbler.png"),
+  receipt: require("./../assets/receipt.png"),
+};
 
 const MainMissionPage = ({ setShowCameraPage }) => {
-  const missions = [
-    {
-      missionclass: "에너지",
-      title: "컴퓨터 절전기능 사용하기",
-      description: "사용하지 않는 컴퓨터 절전 모드로 변경하기",
-      image: require("./../assets/mission1.png"),
-    },
-    {
-      missionclass: "소비",
-      title: "저탄소 식단 운영하기",
-      description: "탄소를 많이 배출하지 않는 식단으로 식사 구성하기",
-      image: require("./../assets/mission2.png"),
-    },
-    {
-      missionclass: "소비",
-      title: "탄소를 고려한 소비 촉진하기",
-      description: "탄소 발자국을 최소화한 소비 촉진하기",
-      image: require("./../assets/mission3.png"),
-    },
-  ];
+  const [missionList, setMissionList] = useState(null);
+
+  useEffect(() => {
+    async function getMissions() {
+      try {
+        const response = await API(
+          "/component/quest/get/today",
+          "GET",
+          null,
+          true
+        );
+        const newMissions = response.data.data.quest_data;
+        setMissionList(newMissions);
+        console.log(newMissions);
+      } catch (error) {
+        console.error("Failed to fetch missions:", error);
+      }
+    }
+    getMissions();
+  }, []);
 
   return (
     <View>
@@ -47,10 +53,7 @@ const MainMissionPage = ({ setShowCameraPage }) => {
           <Text style={styles.title}>오늘의 </Text>
           <Text style={styles.title_sub}>추천 미션</Text>
         </View>
-        <TouchableOpacity
-          style={{ zIndex: 0 }}
-          onPress={() => setShowCameraPage(true)}
-        >
+        <TouchableOpacity style={{ zIndex: 0 }}>
           <View style={styles.card}>
             <Image
               source={require("./../assets/missionMain.png")}
@@ -90,33 +93,48 @@ const MainMissionPage = ({ setShowCameraPage }) => {
           </View> */}
         </View>
         <View style={styles.missionList}>
-          {missions.map((mission, index) => (
-            <View key={index}>
-              <TouchableOpacity style={styles.missionCard}>
-                <View style={styles.missionContent}>
-                  <Text style={styles.missionClass}>
-                    {mission.missionclass}
-                  </Text>
-                  <Text style={styles.missionTitle}>{mission.title}</Text>
-                  <Text style={styles.description}>{mission.description}</Text>
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={[styles.button, styles.authButton]}
-                    >
-                      <Text style={styles.buttonText}>인증하기</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, styles.confirmButton]}
-                    >
-                      <Text style={styles.confirmButtonText}>확인하기</Text>
-                    </TouchableOpacity>
+          {missionList &&
+            Object.entries(missionList).map(
+              ([title, { givePoint, text, mission }], index) => (
+                <View key={index}>
+                  <View style={styles.missionCard}>
+                    <View style={styles.missionContent}>
+                      <Text style={styles.missionTitle}>{title}</Text>
+                      <Text style={styles.description}>{text}</Text>
+                      <Text style={styles.points}>{givePoint}P</Text>
+                      <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                          style={[styles.button, styles.authButton]}
+                        >
+                          <Text
+                            style={styles.buttonText}
+                            onPress={() => {
+                              setShowCameraPage(mission, givePoint);
+                            }}
+                          >
+                            인증하기
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.button, styles.confirmButton]}
+                        >
+                          <Text style={styles.confirmButtonText}>확인하기</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    {mission && (
+                      <Image
+                        source={missionImages[mission]}
+                        style={styles.missionImage}
+                      />
+                    )}
                   </View>
+                  {index < Object.entries(missionList).length - 1 && (
+                    <View style={styles.separator} />
+                  )}
                 </View>
-                <Image source={mission.image} style={styles.missionImage} />
-              </TouchableOpacity>
-              {index < missions.length - 1 && <View style={styles.separator} />}
-            </View>
-          ))}
+              )
+            )}
         </View>
       </ScrollView>
     </View>
@@ -125,13 +143,25 @@ const MainMissionPage = ({ setShowCameraPage }) => {
 
 const MissionPage = () => {
   const [showCameraPage, setShowCameraPage] = useState(false);
+  const [selectedMission, setSelectedMission] = useState(null);
+  const [selectedMissionPoint, setSelectedMissionPoint] = useState(0);
+
+  const handleShowCameraPage = (mission, point) => {
+    setSelectedMission(mission);
+    setShowCameraPage(true);
+    setSelectedMissionPoint(point);
+  };
 
   return (
     <View style={styles.container}>
       {showCameraPage ? (
-        <CameraPage setShowCameraPage={setShowCameraPage} />
+        <CameraPage
+          setShowCameraPage={setShowCameraPage}
+          mission={selectedMission}
+          point={selectedMissionPoint}
+        />
       ) : (
-        <MainMissionPage setShowCameraPage={setShowCameraPage} />
+        <MainMissionPage setShowCameraPage={handleShowCameraPage} />
       )}
     </View>
   );
