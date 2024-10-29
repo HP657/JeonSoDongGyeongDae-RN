@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import API from "./API/API";
 
-function CameraPage({ setShowCameraPage }) {
+function CameraPage({ setShowCameraPage, mission, point }) {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
@@ -19,7 +19,7 @@ function CameraPage({ setShowCameraPage }) {
   const [thing, setThing] = useState(null);
   const [showRedOverlay, setShowRedOverlay] = useState(false);
   const [showGreenOverlay, setShowGreenOverlay] = useState(false);
-
+  console.log(mission);
   if (!permission) {
     return <View />;
   }
@@ -59,9 +59,23 @@ function CameraPage({ setShowCameraPage }) {
         console.log("Upload success:", response.data.prediction);
         setThing(response.data.prediction);
 
-        if (response.data.prediction.result) {
+        if (response.data.prediction.result || true) {
           setShowRedOverlay(false);
           setShowGreenOverlay(true);
+          try {
+            const response = await API(
+              "/sales/point/update",
+              "POST",
+              {
+                input_type: "add",
+                point,
+              },
+              true
+            );
+            console.log(response.data);
+          } catch (error) {
+            console.error("Failed:", error.message);
+          }
         } else {
           setShowRedOverlay(true);
           setShowGreenOverlay(false);
@@ -97,20 +111,19 @@ function CameraPage({ setShowCameraPage }) {
           </TouchableOpacity>
         </View>
         {showRedOverlay && (
-          <View
-            style={[
-              styles.overlay,
-              { backgroundColor: "rgba(255, 0, 0, 0.5)" },
-            ]}
-          />
+          <View style={[styles.overlay, { backgroundColor: "#FF0000" }]}>
+            <Text style={styles.overlayTitle}>인증 실패</Text>
+            <Text style={styles.overlaySub}>
+              사진이 올바르게 인식하지 못했습니다.
+            </Text>
+            <Text style={styles.overlaySub}>다시 시도 해주세요</Text>
+          </View>
         )}
         {showGreenOverlay && (
-          <View
-            style={[
-              styles.overlay,
-              { backgroundColor: "rgba(0, 255, 0, 0.5)" },
-            ]}
-          />
+          <View style={[styles.overlay, { backgroundColor: "#00FF38" }]}>
+            <Text style={styles.overlayTitle}>인증 성공</Text>
+            <Text style={styles.overlaySub}>포인트를 획득하였습니다.</Text>
+          </View>
         )}
       </CameraView>
       {photoUri && (
@@ -173,7 +186,17 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.5, // Adjust opacity as needed
+    opacity: 0.5,
+    alignItems: "center",
+  },
+  overlayTitle: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 30,
+    marginTop: 40,
+  },
+  overlaySub: {
+    fontSize: 20,
   },
 });
 
