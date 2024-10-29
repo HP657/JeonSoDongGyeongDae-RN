@@ -1,45 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import API from "./API/API";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const RankingPage = () => {
   const [userData, setUserData] = useState(null);
   const [myData, setMyData] = useState(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const userResponse = await API(
-          "/component/ranking/get/rankings",
-          "GET",
-          null,
-          true
-        );
-        const modifiedData = userResponse.data.map((item) => ({
-          ...item,
-          id: item.user_id,
-          rank: item.ranking,
-        }));
-        setUserData(modifiedData);
-        console.log("User Data:", modifiedData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-
-      try {
-        const myResponse = await API(
-          "/component/ranking/get/my",
-          "GET",
-          null,
-          true
-        );
-        setMyData(myResponse.data);
-        console.log("My Data:", myResponse.data);
-      } catch (error) {
-        console.error("Error fetching my data:", error);
-      }
+  async function fetchData() {
+    try {
+      const userResponse = await API(
+        "/component/ranking/get/rankings",
+        "GET",
+        null,
+        true
+      );
+      const modifiedData = userResponse.data.map((item) => ({
+        ...item,
+        id: item.user_id,
+        rank: item.ranking,
+      }));
+      setUserData(modifiedData);
+      console.log("User Data:", modifiedData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
 
+    try {
+      const myResponse = await API(
+        "/component/ranking/get/my",
+        "GET",
+        null,
+        true
+      );
+      setMyData(myResponse.data);
+      console.log("My Data:", myResponse.data);
+    } catch (error) {
+      console.error("Error fetching my data:", error);
+    }
+  }
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -90,6 +96,12 @@ const RankingPage = () => {
             style={styles.runningIcon}
           />
         </View>
+        <TouchableOpacity
+          onPress={() => fetchData()}
+          style={styles.refreshButton}
+        >
+          <MaterialIcons name="refresh" size={20} color="black" />
+        </TouchableOpacity>
       </View>
       <View style={styles.bg}>
         <View style={styles.myRank}>
@@ -111,8 +123,6 @@ const RankingPage = () => {
     </View>
   );
 };
-
-// 나머지 스타일 코드는 동일
 
 const styles = StyleSheet.create({
   container: {
@@ -232,6 +242,11 @@ const styles = StyleSheet.create({
     height: 25,
     marginLeft: 5,
     marginRight: 4,
+  },
+  refreshButton: {
+    marginRight: 20,
+    alignSelf: "flex-end",
+    marginTop: 15,
   },
 });
 

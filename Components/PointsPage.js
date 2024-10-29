@@ -1,6 +1,14 @@
-import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useEffect, useState } from "react";
 import API from "./API/API";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const coupons = [
   {
@@ -47,15 +55,17 @@ const products = [
 const PointsPage = () => {
   const [myPoint, setMyPoint] = useState(0);
 
-  useEffect(() => {
-    async function getMyPoint() {
-      try {
-        const response = await API("/sales/point/get", "GET", null, true);
-        setMyPoint(response.data.data.point);
-      } catch (error) {
-        console.error("Failed to fetch my point:", error);
-      }
+  const getMyPoint = async () => {
+    try {
+      const response = await API("/sales/point/get", "GET", null, true);
+      setMyPoint(response.data.data.point);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Failed to fetch my point:", error);
     }
+  };
+
+  useEffect(() => {
     getMyPoint();
   }, []);
 
@@ -63,7 +73,12 @@ const PointsPage = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>포인트 상점</Text>
-        <Text style={styles.myPoint}>보유중인 포인트 : {myPoint}</Text>
+        <View style={styles.pointContainer}>
+          <Text style={styles.myPoint}>보유중인 포인트 : {myPoint}</Text>
+          <TouchableOpacity onPress={getMyPoint} style={styles.refreshButton}>
+            <MaterialIcons name="refresh" size={20} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
       <ScrollView>
         <Text style={styles.sectionTitle}>인기 상품권</Text>
@@ -93,22 +108,32 @@ const PointsPage = () => {
             <View key={index} style={styles.productItemContainer}>
               <Image source={product.image} style={styles.productImage} />
               <Text style={styles.productDetail}>{product.detail}</Text>
-              <View style={[styles.row, { justifyContent: "flex-end" }]}>
-                <Text style={styles.productDiscount}>{product.discount}</Text>
-                <Text
-                  style={
-                    product.sale_price
-                      ? styles.productPrice
-                      : styles.productSalePrice
-                  }
+              <View style={styles.row}>
+                <View style={{ flex: 1, alignItems: "flex-start" }}>
+                  <Text style={styles.productDiscount}>{product.discount}</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    flex: 1,
+                  }}
                 >
-                  {product.price}
-                </Text>
-                {product.sale_price && (
-                  <Text style={styles.productSalePrice}>
-                    {product.sale_price}
+                  <Text
+                    style={
+                      product.sale_price
+                        ? styles.productPrice
+                        : styles.productSalePrice
+                    }
+                  >
+                    {product.price}
                   </Text>
-                )}
+                  {product.sale_price && (
+                    <Text style={styles.productSalePrice}>
+                      {product.sale_price}
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
           ))}
@@ -126,7 +151,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFFFFF" },
   header: { alignItems: "center", paddingTop: 50, paddingBottom: 20 },
   headerText: { fontSize: 16, fontWeight: "bold" },
+  pointContainer: { flexDirection: "row", alignItems: "center" },
   myPoint: { fontSize: 16, fontWeight: "bold", marginVertical: 10 },
+  refreshButton: { marginLeft: 10 }, // 새로고침 버튼 스타일
   sectionTitle: { fontWeight: "bold", fontSize: 16, marginLeft: 15 },
   couponsContainer: { marginLeft: 5, marginBottom: 10 },
   couponItemContainer: { marginRight: 10 },
@@ -145,13 +172,17 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   couponImage: { width: 100, height: 45 },
-  couponDetail: { fontSize: 9, color: "#A3A3A3" },
+  couponDetail: { fontSize: 9, color: "#A3A3A3", marginTop: 4 },
   couponPoints: { fontSize: 15 },
   row: { flexDirection: "row" },
   productItemContainer: { marginLeft: 10 },
   productImage: { width: 120, height: 170, borderRadius: 8 },
-  productDetail: { fontWeight: "bold", fontSize: 10 },
-  productDiscount: { color: "red", fontWeight: "bold", fontSize: 10 },
+  productDetail: { fontWeight: "bold", fontSize: 10, textAlign: "center" },
+  productDiscount: {
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 10,
+  },
   productPrice: {
     textDecorationLine: "line-through",
     color: "#9B9B9B",
