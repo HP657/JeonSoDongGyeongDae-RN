@@ -40,7 +40,7 @@ const LoginPage = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Text style={styles.title}>로그인 페이지</Text>
+        <Text style={styles.title}>로그인</Text>
         <TextInput
           style={styles.input}
           placeholder="ID"
