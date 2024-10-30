@@ -42,7 +42,7 @@ const SignUpPage = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Text style={styles.title}>회원가입 페이지</Text>
+        <Text style={styles.title}>회원가입</Text>
         <TextInput
           style={styles.input}
           placeholder="ID"
